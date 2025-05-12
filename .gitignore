@@ -3,10 +3,12 @@
 __pycache__/
 *.pyc
 
-/input/user.json
+/input/*.json
 /output/*
 !/output/.gitkeep
 .env
 
 .idea/
 .DS_Store
+
+venv/

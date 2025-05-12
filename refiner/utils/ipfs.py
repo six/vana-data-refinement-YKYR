@@ -4,43 +4,39 @@ import os
 import requests
 from refiner.config import settings
 
-PINATA_FILE_API_ENDPOINT = "https://api.pinata.cloud/pinning/pinFileToIPFS"
-PINATA_JSON_API_ENDPOINT = "https://api.pinata.cloud/pinning/pinJSONToIPFS"
-
 def upload_json_to_ipfs(data):
     """
-    Uploads JSON data to IPFS using Pinata API.
+    Uploads JSON data to the private IPFS server.
     :param data: JSON data to upload (dictionary or list)
     :return: IPFS hash
     """
-    if not settings.PINATA_API_KEY or not settings.PINATA_API_SECRET:
-        raise Exception("Error: Pinata IPFS API credentials not found, please check your environment variables")
-
-    headers = {
-        "Content-Type": "application/json",
-        "pinata_api_key": settings.PINATA_API_KEY,
-        "pinata_secret_api_key": settings.PINATA_API_SECRET
-    }
-
     try:
-        response = requests.post(
-            PINATA_JSON_API_ENDPOINT,
-            data=json.dumps(data),
-            headers=headers
-        )
+        # Prepare the API endpoint for file adding
+        add_endpoint = f"{settings.IPFS_API_URL}/add"
+        
+        # Convert data to JSON string
+        json_str = json.dumps(data)
+        
+        # Use requests to upload directly
+        files = {
+            'file': ('file.json', json_str, 'application/json')
+        }
+        
+        response = requests.post(add_endpoint, files=files)
         response.raise_for_status()
-
+        
         result = response.json()
-        logging.info(f"Successfully uploaded JSON to IPFS with hash: {result['IpfsHash']}")
-        return result['IpfsHash']
+        hash_value = result['Hash']
+        logging.info(f"Successfully uploaded JSON to IPFS with hash: {hash_value}")
+        return hash_value
 
-    except requests.exceptions.RequestException as e:
+    except Exception as e:
         logging.error(f"An error occurred while uploading JSON to IPFS: {e}")
         raise e
 
 def upload_file_to_ipfs(file_path=None):
     """
-    Uploads a file to IPFS using Pinata API (https://pinata.cloud/)
+    Uploads a file to the private IPFS server.
     :param file_path: Path to the file to upload (defaults to encrypted database)
     :return: IPFS hash
     """
@@ -50,30 +46,22 @@ def upload_file_to_ipfs(file_path=None):
     
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"File not found: {file_path}")
-        
-    if not settings.PINATA_API_KEY or not settings.PINATA_API_SECRET:
-        raise Exception("Error: Pinata IPFS API credentials not found, please check your environment variables")
-
-    headers = {
-        "pinata_api_key": settings.PINATA_API_KEY,
-        "pinata_secret_api_key": settings.PINATA_API_SECRET
-    }
 
     try:
+        # Prepare the API endpoint for file adding
+        add_endpoint = f"{settings.IPFS_API_URL}/add"
+        
         with open(file_path, 'rb') as file:
             files = {
                 'file': file
             }
-            response = requests.post(
-                PINATA_FILE_API_ENDPOINT,
-                files=files,
-                headers=headers
-            )
+            response = requests.post(add_endpoint, files=files)
         
         response.raise_for_status()
         result = response.json()
-        logging.info(f"Successfully uploaded file to IPFS with hash: {result['IpfsHash']}")
-        return result['IpfsHash']
+        hash_value = result['Hash']
+        logging.info(f"Successfully uploaded file to IPFS with hash: {hash_value}")
+        return hash_value
 
     except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred while uploading file to IPFS: {e}")

@@ -6,32 +6,33 @@ class Settings(BaseSettings):
     """Global settings configuration using environment variables"""
     
     INPUT_DIR: str = Field(
-        default="/input",
+        default="input",
         description="Directory containing input files to process"
     )
     
     OUTPUT_DIR: str = Field(
-        default="/output",
+        default="output",
         description="Directory where output files will be written"
     )
     
     REFINEMENT_ENCRYPTION_KEY: str = Field(
-        default=None,
+        default="",
         description="Key to symmetrically encrypt the refinement. This is derived from the original file encryption key"
     )
     
-    PINATA_API_KEY: Optional[str] = Field(
-        default=None,
-        description="Pinata API key"
+    # Add private IPFS server configuration
+    IPFS_API_URL: str = Field(
+        default="https://ipfs.ykyr.net/api/v0",
+        description="URL for the private IPFS server API"
     )
     
-    PINATA_API_SECRET: Optional[str] = Field(
-        default=None,
-        description="Pinata API secret"
+    IPFS_GATEWAY_URL: str = Field(
+        default="https://ipfs.ykyr.net/ipfs",
+        description="URL for the IPFS gateway to access content"
     )
     
     SCHEMA_NAME: str = Field(
-        default="Google Drive Analytics",
+        default="Browsing Data Analytics",
         description="Name of the schema"
     )
     
@@ -41,7 +42,7 @@ class Settings(BaseSettings):
     )
     
     SCHEMA_DESCRIPTION: str = Field(
-        default="Schema for the Google Drive DLP, representing some basic analytics of the Google user",
+        default="Schema for browsing data analytics, representing user browsing patterns and statistics",
         description="Description of the schema"
     )
     
@@ -54,4 +55,4 @@ class Settings(BaseSettings):
         env_file = ".env"
         case_sensitive = True
 
-settings = Settings() 
+settings = Settings()
