@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-
 from refiner.models.offchain_schema import OffChainSchema
 from refiner.models.output import Output, BrowsingOutput, BrowsingStatsOutput, BrowsingEntryOutput
 from refiner.transformer.browsing_transformer import BrowsingTransformer
