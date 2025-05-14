@@ -20,7 +20,7 @@ class Refiner:
         # Iterate through files and transform data
         for input_filename in os.listdir(settings.INPUT_DIR):
             input_file = os.path.join(settings.INPUT_DIR, input_filename)
-            if os.path.splitext(input_file)[1].lower() == '.json':
+            if os.path.splitext(input_file)[1].lower() in ['.json', '.bin']:
                 with open(input_file, 'r') as f:
                     input_data = json.load(f)
 
