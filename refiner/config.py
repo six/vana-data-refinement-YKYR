@@ -6,12 +6,12 @@ class Settings(BaseSettings):
     """Global settings configuration using environment variables"""
     
     INPUT_DIR: str = Field(
-        default="input",
+        default="/input",
         description="Directory containing input files to process"
     )
     
     OUTPUT_DIR: str = Field(
-        default="output",
+        default="/output",
         description="Directory where output files will be written"
     )
     
