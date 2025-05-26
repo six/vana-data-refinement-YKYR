@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     
     # Add private IPFS server configuration
     IPFS_API_URL: str = Field(
-        default="https://ipfs.ykyr.net/api/v0",
+        default="https://test.ipfs.ykyr.net/api/v0",
         description="URL for the private IPFS server API"
     )
     
