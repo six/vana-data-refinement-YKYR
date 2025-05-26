@@ -29,8 +29,10 @@ class Refiner:
                 if ext == '.json':
                     try:
                         with open(input_file, 'r') as f:
-                            logging.info(f"Loading data from {input_file}")
-                            input_data = json.load(f)
+                            raw_content = f.read()
+                            logging.info(f"Raw content of {input_file}:\n{raw_content}")
+                            f.seek(0)
+                            input_data = json.loads(raw_content)
                     except Exception as e:
                         logging.error(f"Failed to load {input_file}: {e}")
                         continue
@@ -38,13 +40,18 @@ class Refiner:
                 elif ext == '.zip':
                     input_data_list = []
                     try:
+                        with open(input_file, 'rb') as f:
+                            raw_bytes = f.read(200)
+                            logging.info(f"First 200 bytes of {input_file} (for zip check): {raw_bytes}")
                         with zipfile.ZipFile(input_file, 'r') as zip_ref:
                             json_files = [name for name in zip_ref.namelist() if name.lower().endswith('.json')]
                             logging.info(f"Found JSON files in zip {input_filename}: {json_files}")
                             for json_file in json_files:
                                 with zip_ref.open(json_file) as f:
                                     try:
-                                        input_data = json.load(f)
+                                        raw_content = f.read().decode('utf-8')
+                                        logging.info(f"Raw content of {json_file} in {input_filename}:\n{raw_content}")
+                                        input_data = json.loads(raw_content)
                                         input_data_list.append((json_file, input_data))
                                         logging.info(f"Loaded {json_file} from {input_filename}")
                                     except Exception as e:
