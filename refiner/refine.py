@@ -32,36 +32,12 @@ class Refiner:
                         logging.info(f"Raw content of {input_file}:\n{raw_content}")
                         f.seek(0)
                         input_data = json.loads(raw_content)
+                        input_data_list = [(input_filename, input_data)]
                 except Exception as e:
                     logging.error(f"Failed to load {input_file}: {e}")
-                    continue
-                input_data_list = [(input_filename, input_data)]
                     input_data_list = []
-                    try:
-                        with open(input_file, 'rb') as f:
-                            raw_bytes = f.read(200)
-                            logging.info(f"First 200 bytes of {input_file} (for zip check): {raw_bytes}")
-                        with zipfile.ZipFile(input_file, 'r') as zip_ref:
-                            json_files = [name for name in zip_ref.namelist() if name.lower().endswith('.json')]
-                            logging.info(f"Found JSON files in zip {input_filename}: {json_files}")
-                            for json_file in json_files:
-                                with zip_ref.open(json_file) as f:
-                                    try:
-                                        raw_content = f.read().decode('utf-8')
-                                        logging.info(f"Raw content of {json_file} in {input_filename}:\n{raw_content}")
-                                        input_data = json.loads(raw_content)
-                                        input_data_list.append((json_file, input_data))
-                                        logging.info(f"Loaded {json_file} from {input_filename}")
-                                    except Exception as e:
-                                        logging.error(f"Failed to load {json_file} from {input_filename}: {e}")
-                    except Exception as e:
-                        logging.error(f"Failed to open/process zip file {input_file}: {e}")
-                        continue
-            else:
-                input_data_list = []
-                
-                logging.info("processing input_data_list:",input_data_list)
-
+                    continue
+            
                 for data_filename, input_data in input_data_list:
                     # Transform browsing data
                     logging.info(f"Instantiating BrowsingTransformer for {data_filename}")
