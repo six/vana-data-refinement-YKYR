@@ -24,7 +24,7 @@ class Refiner:
             input_file = os.path.join(settings.INPUT_DIR, input_filename)
             ext = os.path.splitext(input_file)[1].lower()
             logging.info(f"Processing file: {input_filename} (full path: {input_file}, extension: {ext})")
-            if ext in ['.json', '.bin']:
+            if ext in ['.json', '.zip']:
                 try:
                     with open(input_file, 'r') as f:
                         logging.info(f"Loading data from {input_file}")
