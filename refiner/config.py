@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     )
     
     IPFS_GATEWAY_URL: str = Field(
-        default="https://ipfs.ykyr.net/ipfs",
+        default="ipfs://",
         description="URL for the IPFS gateway to access content"
     )
     

@@ -26,18 +26,16 @@ class Refiner:
             ext = os.path.splitext(input_file)[1].lower()
             logging.info(f"Processing file: {input_filename} (full path: {input_file}, extension: {ext})")
             if ext in ['.json', '.zip']:
-                if ext == '.json':
-                    try:
-                        with open(input_file, 'r') as f:
-                            raw_content = f.read()
-                            logging.info(f"Raw content of {input_file}:\n{raw_content}")
-                            f.seek(0)
-                            input_data = json.loads(raw_content)
-                    except Exception as e:
-                        logging.error(f"Failed to load {input_file}: {e}")
-                        continue
-                    input_data_list = [(input_filename, input_data)]
-                elif ext == '.zip':
+                try:
+                    with open(input_file, 'r') as f:
+                        raw_content = f.read()
+                        logging.info(f"Raw content of {input_file}:\n{raw_content}")
+                        f.seek(0)
+                        input_data = json.loads(raw_content)
+                except Exception as e:
+                    logging.error(f"Failed to load {input_file}: {e}")
+                    continue
+                input_data_list = [(input_filename, input_data)]
                     input_data_list = []
                     try:
                         with open(input_file, 'rb') as f:
@@ -59,8 +57,10 @@ class Refiner:
                     except Exception as e:
                         logging.error(f"Failed to open/process zip file {input_file}: {e}")
                         continue
-                else:
-                    input_data_list = []
+            else:
+                input_data_list = []
+                
+                logging.info("processing input_data_list:",input_data_list)
 
                 for data_filename, input_data in input_data_list:
                     # Transform browsing data
@@ -79,7 +79,8 @@ class Refiner:
                         dialect=settings.SCHEMA_DIALECT,
                         schema=transformer.get_schema()
                     )
-                    output.schema = schema
+                    schema_hash = upload_json_to_ipfs(schema.model_dump())
+                    output.schema = f"{settings.IPFS_GATEWAY_URL}/{schema_hash}"
                     logging.info(f"Schema created: {schema.model_dump()}")
                     
                     # Generate output data for browsing
