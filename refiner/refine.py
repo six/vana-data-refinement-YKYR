@@ -55,8 +55,7 @@ class Refiner:
                         dialect=settings.SCHEMA_DIALECT,
                         schema=transformer.get_schema()
                     )
-                    schema_hash = upload_json_to_ipfs(schema.model_dump())
-                    output.schema = f"{settings.IPFS_GATEWAY_URL}/{schema_hash}"
+                    output.schema = schema
                     logging.info(f"Schema created: {schema.model_dump()}")
                     
                     # Generate output data for browsing
@@ -87,17 +86,11 @@ class Refiner:
                         logging.info(f"No browsing data found for {data_filename}")
                     
                     # Upload the schema to IPFS
-                    schema_file = os.path.join(settings.OUTPUT_DIR, 'schema.json')
                     try:
-                        with open(schema_file, 'w') as f:
-                            json.dump(schema.model_dump(), f, indent=4)
-                            logging.info(f"Schema written to {schema_file}")
-                            schema_ipfs_hash = upload_json_to_ipfs(schema.model_dump())
-                            logging.info(f"Schema uploaded to IPFS with hash: {schema_ipfs_hash}")
+                        schema_ipfs_hash = upload_json_to_ipfs(schema.model_dump())
+                        logging.info(f"Schema uploaded to IPFS with hash: {schema_ipfs_hash}")
                     except Exception as e:
-                        logging.error(f"Failed to write/upload schema for {data_filename}: {e}")
-                    logging.info(f"DEBUG: refined data:{browsing_data}")
-                    logging.info(f"DEBUG: schema:{schema.model_dump()}")
+                        logging.error(f"Failed to upload schema for {data_filename}: {e}")
                     
                     # Encrypt and upload the database to IPFS
                     try:
@@ -105,7 +98,7 @@ class Refiner:
                         encrypted_path = encrypt_file(settings.REFINEMENT_ENCRYPTION_KEY, self.db_path)
                         logging.info(f"Encrypted database written to {encrypted_path}")
                         ipfs_hash = upload_file_to_ipfs(encrypted_path)
-                        output.refinement_url = f"{settings.IPFS_GATEWAY_URL}/{ipfs_hash}"
+                        output.refinement_url = f"{settings.IPFS_GATEWAY_URL}{ipfs_hash}"
                         logging.info(f"Encrypted DB uploaded to IPFS with hash: {ipfs_hash}")
                     except Exception as e:
                         logging.error(f"Failed to encrypt/upload database for {data_filename}: {e}")
