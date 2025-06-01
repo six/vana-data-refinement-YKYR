@@ -26,6 +26,12 @@ class Settings(BaseSettings):
         description="URL for the private IPFS server API"
     )
     
+        # Add private IPFS server configuration
+    IPFS_HTTPS_URL: str = Field(
+        default="https://test.ipfs.ykyr.net",
+        description="URL for the private IPFS server HTTPS"
+    )
+    
     IPFS_GATEWAY_URL: str = Field(
         default="ipfs://",
         description="URL for the IPFS gateway to access content"
