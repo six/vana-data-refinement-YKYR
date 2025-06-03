@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     )
     
     IPFS_GATEWAY_URL: str = Field(
-        default="ipfs://",
+        default="https://ipfs.vana.org/ipfs",
         description="URL for the IPFS gateway to access content"
     )
     
