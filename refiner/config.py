@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     )
     
     IPFS_GATEWAY_URL: str = Field(
-        default="https://ipfs.vana.org/ipfs",
+        default="https://gateway.pinata.cloud/ipfs",
         description="URL for the IPFS gateway to access content"
     )
     
@@ -57,16 +57,6 @@ class Settings(BaseSettings):
         description="Dialect of the schema"
     )
     
-    # Optional, required if using https://pinata.cloud (IPFS pinning service)
-    PINATA_API_KEY: Optional[str] = Field(
-        default=None,
-        description="Pinata API key"
-    )
-    
-    PINATA_API_SECRET: Optional[str] = Field(
-        default=None,
-        description="Pinata API secret"
-    )
     
     class Config:
         env_file = ".env"
