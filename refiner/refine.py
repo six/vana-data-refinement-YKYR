@@ -98,7 +98,7 @@ class Refiner:
                         encrypted_path = encrypt_file(settings.REFINEMENT_ENCRYPTION_KEY, self.db_path)
                         logging.info(f"Encrypted database written to {encrypted_path}")
                         ipfs_hash = upload_file_to_ipfs(encrypted_path)
-                        output.refinement_url = f"https://gateway.pinata.cloud/ipfs/{ipfs_hash}"
+                        output.refinement_url = f"{settings.IPFS_HTTPS_URL}/ipfs/{ipfs_hash}"
                         logging.info(f"Encrypted DB uploaded to IPFS with hash: {ipfs_hash}")
                     except Exception as e:
                         logging.error(f"Failed to encrypt/upload database for {data_filename}: {e}")
