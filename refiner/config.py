@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     )
     
     IPFS_GATEWAY_URL: str = Field(
-        default="https://gateway.pinata.cloud/ipfs",
+        default="https://ipfs.ykyr.net/ipfs",
         description="URL for the IPFS gateway to access content"
     )
     
