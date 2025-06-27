@@ -37,6 +37,17 @@ class Settings(BaseSettings):
         description="URL for the IPFS gateway to access content"
     )
     
+    PINATA_API_KEY: Optional[str] = Field(
+        default=None,
+        description="Pinata API key"
+    )
+
+    PINATA_API_SECRET: Optional[str] = Field(
+        default=None,
+        description="Pinata API secret"
+    )
+    
+    
     SCHEMA_NAME: str = Field(
         default="Browsing Data Analytics",
         description="Name of the schema"
